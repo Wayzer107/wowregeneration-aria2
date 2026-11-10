@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using WoWRegeneration.Data;
 using WoWRegeneration.Repositories;
 using WoWRegeneration.UI;
@@ -62,9 +63,29 @@ namespace WoWRegeneration
             WoWRepository repository = RepositoriesManager.GetRepositoryByMfil(CurrentSession.MFil);
             List<FileObject> files = manifest.GenerateFileList();
 
-            var downloader = new FileDownloader(repository, files);
-            if (!downloader.Start())
+            string aria2 = Aria2.Resolve();
+            if (aria2 == null)
                 return;
+
+            var downloader = new FileDownloader(repository, files);
+            if (!downloader.Start(aria2))
+                return;
+
+            // The client executables are Windows files; the MPQ data is shared by both systems.
+            if (CurrentSession.Os == "Win")
+            {
+                if (!ClientFiles.Download(aria2, Path.GetFullPath(repository.GetDefaultDirectory())))
+                {
+                    Program.Log("Client files are incomplete. Run the program again to retry.", ConsoleColor.Red);
+                    return;
+                }
+            }
+            else
+            {
+                Program.Log("Skipping the Windows client files (Wow.exe etc.) for OS " + CurrentSession.Os,
+                            ConsoleColor.DarkGray);
+            }
+
             CurrentSession.SessionCompleted = true;
             CurrentSession.SaveSession();
             CurrentSession.Destroy();

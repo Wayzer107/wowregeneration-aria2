@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace WoWRegeneration.Data
 {
@@ -59,57 +58,6 @@ namespace WoWRegeneration.Data
                 }
             }
             return true;
-        }
-    }
-
-    /// <summary>
-    ///     Finds the aria2c executable.
-    /// </summary>
-    public static class Aria2Locator
-    {
-        private static readonly string[] Names = {"aria2c.exe", "aria2c"};
-
-        /// <summary>
-        ///     Returns the explicit path if given and present, else aria2c next to this program,
-        ///     else the first aria2c on PATH. Returns null if none is found.
-        /// </summary>
-        public static string Find(string explicitPath)
-        {
-            if (!String.IsNullOrEmpty(explicitPath))
-                return File.Exists(explicitPath) ? Path.GetFullPath(explicitPath) : null;
-
-            string found = FindIn(AppContext.BaseDirectory);
-            if (found != null)
-                return found;
-
-            string path = Environment.GetEnvironmentVariable("PATH") ?? "";
-            foreach (string dir in path.Split(Path.PathSeparator))
-            {
-                found = FindIn(dir.Trim().Trim('"'));
-                if (found != null)
-                    return found;
-            }
-            return null;
-        }
-
-        private static string FindIn(string directory)
-        {
-            if (String.IsNullOrEmpty(directory))
-                return null;
-            foreach (string name in Names)
-            {
-                try
-                {
-                    string candidate = Path.Combine(directory, name);
-                    if (File.Exists(candidate))
-                        return candidate;
-                }
-                catch (ArgumentException)
-                {
-                    // Malformed PATH entry.
-                }
-            }
-            return null;
         }
     }
 }
