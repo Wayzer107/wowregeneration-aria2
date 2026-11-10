@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net11.0</TargetFramework>
+    <RootNamespace>WoWRegeneration</RootNamespace>
+    <AssemblyName>WoWRegeneration</AssemblyName>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+
+    <Product>WoWRegeneration</Product>
+    <AssemblyTitle>WoWRegeneration</AssemblyTitle>
+    <Copyright>Copyright © 2013</Copyright>
+    <Version>1.0.0.0</Version>
+  </PropertyGroup>
+
+</Project>
